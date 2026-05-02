@@ -33,18 +33,14 @@ target_metadata = TableEntities.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-current_url = config.get_main_option("sqlalchemy.url")
+settings = get_settings()
 
-if not current_url:
-    from settings.base import get_settings
+sync_db_url = settings.DB.URL.replace(
+    "postgresql+asyncpg",
+    "postgresql+psycopg",
+)
 
-    settings = get_settings()
-    sync_db_url = settings.DB.URL.replace(
-        "postgresql+asyncpg",
-        "postgresql+psycopg",
-    )
-
-    config.set_main_option("sqlalchemy.url", sync_db_url)
+config.set_main_option("sqlalchemy.url", sync_db_url)
 
 
 def run_migrations_offline() -> None:
