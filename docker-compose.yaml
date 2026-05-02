@@ -1,0 +1,71 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_NAME}-api
+    restart: unless-stopped
+    command: >
+      sh -c ".venv/bin/alembic upgrade head &&
+      .venv/bin/uvicorn app.application:get_app
+      --factory
+      --app-dir src
+      --host 0.0.0.0
+      --port ${APP_PORT}
+      --log-level debug
+      --access-log"
+    environment:
+      PYTHONPATH: /app/src
+      APP_NAME: ${APP_NAME}
+      HOST: ${HOST}
+      APP_PORT: ${APP_PORT}
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+      
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - personalhub-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${APP_NAME}-postgres
+    restart: unless-stopped
+    command:
+      - "postgres"
+      - "-c"
+      - "log_statement=none"
+      - "-c"
+      - "log_min_duration_statement=500"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT_EXTERNAL}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - personalhub-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  personalhub-network:
+    driver: bridge
+    name: ${APP_NAME}-network
+
+volumes:
+  postgres-data:
+    name: ${APP_NAME}-postgres-data
