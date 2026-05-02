@@ -60,14 +60,15 @@ class JSONFormatter(logging.Formatter):
 
 
 class PlainTextHandler(logging.StreamHandler[Any]):
-    """
-    Handler для structlog.
-
-    Выводит сообщение как есть, без добавления traceback.
-    """
-
     def format(self, record: logging.LogRecord) -> str:
-        return record.getMessage()
+        message = record.getMessage()
+
+        if record.exc_info:
+            formatter = logging.Formatter()
+            traceback_text = formatter.formatException(record.exc_info)
+            return f"{message}\n{traceback_text}"
+
+        return message
 
 
 def get_logging_config() -> dict[str, Any]:
@@ -93,11 +94,21 @@ def get_logging_config() -> dict[str, Any]:
             },
         },
         "loggers": {
-            # Отключаем uvicorn логи — они дублируют lifespan logger
-            "uvicorn": {"handlers": [], "level": "CRITICAL", "propagate": False},
-            "uvicorn.error": {"handlers": [], "level": "CRITICAL", "propagate": False},
-            "uvicorn.access": {"handlers": [], "level": "CRITICAL", "propagate": False},
-            # HTTP клиентские логи (httpx/httpcore) — в JSON формате
+            "uvicorn": {
+                "handlers": ["json_handler"],
+                "level": "INFO",
+                "propagate": False,
+            },
+            "uvicorn.error": {
+                "handlers": ["structlog_handler"],
+                "level": "ERROR",
+                "propagate": False,
+            },
+            "uvicorn.access": {
+                "handlers": ["json_handler"],
+                "level": "INFO",
+                "propagate": False,
+            },
             "httpx": {"handlers": ["json_handler"], "level": "INFO", "propagate": False},
             "httpcore": {"handlers": ["json_handler"], "level": "INFO", "propagate": False},
         },

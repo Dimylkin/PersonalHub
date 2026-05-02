@@ -3,6 +3,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from starlette.responses import JSONResponse
 
 from app.lifespan import lifespan
+from app.logger.config import setup_logger
 from interfaces.routes import router
 
 
@@ -14,6 +15,8 @@ def get_app() -> FastAPI:
     Returns:
         FastAPI приложение
     """
+    setup_logger()
+
     app = FastAPI(
         title="PersonalHub-API",
         version="0.0.1",

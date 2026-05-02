@@ -10,7 +10,7 @@ def main() -> None:
         "app.application:get_app",
         host=settings.APP.HOST,
         port=settings.APP.PORT,
-        access_log=False,
+        access_log=True,
         log_config=get_logging_config(),
         forwarded_allow_ips="*",
         factory=True,
