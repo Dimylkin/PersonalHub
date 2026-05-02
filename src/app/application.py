@@ -19,7 +19,7 @@ def get_app() -> FastAPI:
 
     app = FastAPI(
         title="PersonalHub-API",
-        version="0.0.1",
+        version="0.1.0",
         description="API сервиса PersonalHub",
         default_response_class=JSONResponse,
         lifespan=lifespan,
