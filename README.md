@@ -1,5 +1,12 @@
 # 🚀 PersonalHub
 
+![Python](https://img.shields.io/badge/python-3.14-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-red)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![Docker](https://img.shields.io/badge/Docker-enabled-blue)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 Backend-приложение для управления задачами в формате Kanban (boards / columns / tasks).
 
 ---
