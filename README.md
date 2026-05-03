@@ -136,7 +136,7 @@ uv run pytest -v
 POST /api/boards
 
 {
-  "workspace": "WORK"
+  "workspace": "work"
 }
 ```
 

@@ -12,6 +12,7 @@ services:
       --app-dir src
       --host 0.0.0.0
       --port ${APP_PORT}
+      --reload
       --log-level debug
       --access-log"
     environment:
@@ -28,7 +29,13 @@ services:
 
     ports:
       - "${APP_PORT}:${APP_PORT}"
-      
+
+    volumes:
+      - ./src:/app/src
+      - ./alembic.ini:/app/alembic.ini
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./uv.lock:/app/uv.lock
+
     depends_on:
       postgres:
         condition: service_healthy
