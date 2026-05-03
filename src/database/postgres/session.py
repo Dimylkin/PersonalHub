@@ -21,7 +21,7 @@ SessionLocal = async_sessionmaker(
 
 
 async def get_session() -> AsyncSession:
-    async with SessionLocal() as session:
+    async with SessionLocal() as session: 
         try:
             yield session
             await session.commit()
