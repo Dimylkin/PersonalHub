@@ -62,7 +62,10 @@ async def test_get_board_by_id_not_found(client: AsyncClient):
     response = await client.get("/api/boards/999")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Board not found"
+
+    data = response.json()
+    assert data["code"] == "OBJECT_NOT_FOUND"
+    assert data["details"]["id"] == 999
 
 
 async def test_create_board_invalid_workspace(client: AsyncClient):
@@ -107,7 +110,10 @@ async def test_update_board_not_found(client: AsyncClient):
     )
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Board not found"
+
+    data = response.json()
+    assert data["code"] == "OBJECT_NOT_FOUND"
+    assert data["details"]["id"] == 999
 
 
 async def test_update_board_invalid_workspace(client: AsyncClient):

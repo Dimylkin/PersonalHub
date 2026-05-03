@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 from starlette.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from app.exception_handler.app_error import init_json_for_app_error
 from app.lifespan import lifespan
 from app.logger.config import setup_logger
 from interfaces.routes import router
@@ -40,6 +41,8 @@ def get_app() -> FastAPI:
     )
 
     app.include_router(router, prefix="/api")
+
+    init_json_for_app_error(app, use_logger=True)
 
     # Инициализация JSON-обработчиков ошибок
     # Порядок важен: более специфичные обработчики должны быть зарегистрированы первыми

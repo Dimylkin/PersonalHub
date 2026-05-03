@@ -3,7 +3,7 @@ from typing import Any
 
 
 class OpenAPITags(StrEnum):
-    BOARD = "Таблица"
+    BOARD = "Доска"
     COLUMN = "Колонка"
     TASK = "Задача"
 

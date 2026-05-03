@@ -25,7 +25,7 @@ from app.application import get_app
 from database.postgres.tables.board import BoardDB
 from database.postgres.tables.column import ColumnDB
 from database.postgres.tables.task import TaskDB
-from interfaces.dependencies.session import get_session
+from database.postgres.session import get_session
 from settings.base import AppSettings, DBSettings, Settings
 
 
@@ -125,7 +125,13 @@ def apply_migrations(sync_url: str):
 
     cfg = Config(str(alembic_ini_path))
     cfg.set_main_option("script_location", str(migrations_path))
-    cfg.set_main_option("sqlalchemy.url", sync_url)
+    cfg.set_main_option(
+        "sqlalchemy.url",
+        sync_url
+        .replace("postgresql+asyncpg://", "postgresql+psycopg://")
+        .replace("postgresql+psycopg2://", "postgresql+psycopg://")
+        .replace("postgresql://", "postgresql+psycopg://"),
+    )
 
     command.upgrade(cfg, "head")
 

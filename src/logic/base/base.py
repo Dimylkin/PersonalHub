@@ -1,8 +1,11 @@
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from database.postgres.dao.base.base import BaseDAO
 
 
 class BaseLogic:
-    def __init__(self, dao):
+    def __init__(self, dao: BaseDAO):
         self.dao = dao
 
     async def get_by_id(self, entity_id: int):

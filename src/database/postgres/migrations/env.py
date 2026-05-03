@@ -35,9 +35,16 @@ target_metadata = TableEntities.metadata
 
 settings = get_settings()
 
-sync_db_url = settings.DB.URL.replace(
-    "postgresql+asyncpg",
-    "postgresql+psycopg",
+alembic_url = config.get_main_option("sqlalchemy.url")
+
+if not alembic_url or alembic_url.startswith("driver://"):
+    alembic_url = settings.DB.URL
+
+sync_db_url = (
+    alembic_url
+    .replace("postgresql+asyncpg://", "postgresql+psycopg://")
+    .replace("postgresql+psycopg2://", "postgresql+psycopg://")
+    .replace("postgresql://", "postgresql+psycopg://")
 )
 
 config.set_main_option("sqlalchemy.url", sync_db_url)
