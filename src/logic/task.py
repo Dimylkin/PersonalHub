@@ -1,7 +1,7 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from interfaces.dependencies.session import get_session
+from database.postgres.session import get_session
 from database.postgres.dao.task import TaskDAO
 from logic.base import BaseLogic
 
