@@ -25,7 +25,7 @@ class TaskDB(TableEntities):
 
     order: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    start_at: Mapped[dt | None] = mapped_column(DateTime, nullable=True)
-    end_at: Mapped[dt | None] = mapped_column(DateTime, nullable=True)
+    start_at = mapped_column(DateTime(timezone=True), nullable=True)
+    end_at = mapped_column(DateTime(timezone=True), nullable=True)
 
     column: Mapped["ColumnDB"] = relationship(back_populates="tasks")
